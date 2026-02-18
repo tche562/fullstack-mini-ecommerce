@@ -1,5 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import type { Product } from "../types";
+import "./ProductPage.css";
+
+type Product = {
+  id: number;
+  title: string;
+  description: string;
+  price: number | string;
+  imageURL: string;
+  sizeOptions: { id: number; label?: string; long?: string }[];
+};
 
 export default function ProductPage() {
   const [loading, setLoading] = useState(true);
@@ -39,34 +48,48 @@ export default function ProductPage() {
     return `$${n.toFixed(2)}`;
   }, [product?.price]);
 
-  if (loading) return <div style={{ padding: 16 }}>Loading...</div>;
+  if (loading) return <div className="page">Loading...</div>;
   if (error)
-    return <div style={{ padding: 16, color: "crimson" }}>{error}</div>;
-  if (!product) return <div style={{ padding: 16 }}>No product.</div>;
+    return (
+      <div className="page" style={{ color: "crimson" }}>
+        {error}
+      </div>
+    );
+  if (!product) return <div className="page">No product.</div>;
 
   return (
-    <div style={{ padding: 16 }}>
-      <h1 style={{ margin: "0 0 8px" }}>{product.title}</h1>
-      <div style={{ fontWeight: 600, marginBottom: 12 }}>{formattedPrice}</div>
+    <div className="page">
+      <div className="grid">
+        {/* Left: Image */}
+        <div className="imageWrap">
+          <img className="image" src={product.imageURL} alt={product.title} />
+        </div>
 
-      <div style={{ marginBottom: 8 }}>Sizes:</div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {product.sizeOptions.map((s) => {
-          const label = s.label ?? s.long ?? "";
-          return (
-            <span
-              key={s.id}
-              style={{
-                border: "1px solid #ccc",
-                padding: "6px 10px",
-                borderRadius: 4,
-                fontSize: 14,
-              }}
-            >
-              {label}
-            </span>
-          );
-        })}
+        {/* Right: Details */}
+        <div>
+          <h1 className="title">{product.title}</h1>
+          <div className="price">{formattedPrice}</div>
+
+          <p className="desc">{product.description}</p>
+
+          {/* Sizes (display only for now, no selector behavior yet) */}
+          <div className="sectionLabel">Size</div>
+          <div className="sizesRow">
+            {product.sizeOptions.map((s) => {
+              const label = s.label ?? s.long ?? "";
+              return (
+                <span key={s.id} className="sizePill">
+                  {label}
+                </span>
+              );
+            })}
+          </div>
+
+          {/* Button (no logic yet) */}
+          <button className="button" type="button" disabled>
+            Add to Cart
+          </button>
+        </div>
       </div>
     </div>
   );

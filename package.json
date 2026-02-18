@@ -1,0 +1,25 @@
+{
+  "name": "fullstack-mini-ecommerce",
+  "version": "1.0.0",
+  "description": "- Node.js >= 20.19 or Node.js >= 22.12+   - Older Node versions may break Vite due to `crypto.getRandomValues`.",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently -n backend,frontend -c auto \"npm:dev:backend\" \"npm:dev:frontend\"",
+    "dev:backend": "npm --prefix backend run dev",
+    "dev:frontend": "npm --prefix frontend run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tche562/fullstack-mini-ecommerce.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tche562/fullstack-mini-ecommerce/issues"
+  },
+  "homepage": "https://github.com/tche562/fullstack-mini-ecommerce#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
