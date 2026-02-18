@@ -1,7 +1,6 @@
 .page {
     max-width: 980px;
     margin: 0 auto;
-    padding: 24px 16px;
     font-family: Arial, Helvetica, sans-serif;
     color: #111;
 }
@@ -168,4 +167,126 @@
 
 .cartRowQty {
     color: #333;
+}
+
+.miniCart {
+    position: relative;
+    margin-top: 18px;
+}
+
+.miniCartButton {
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    padding: 10px 12px;
+    border-radius: 4px;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.miniCartButton:hover {
+    background: #f7f7f7;
+}
+
+.miniCartBadge {
+    display: inline-flex;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 6px;
+    border-radius: 999px;
+    background: #111;
+    color: #fff;
+    font-size: 12px;
+    line-height: 18px;
+    justify-content: center;
+    align-items: center;
+}
+
+.miniCartPanel {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    width: 260px;
+    border: 1px solid #e6e6e6;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    padding: 12px;
+    z-index: 10;
+}
+
+.miniCartPanelHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.miniCartPanelTitle {
+    font-weight: 700;
+}
+
+.miniCartClose {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    padding: 4px;
+}
+
+.miniCartEmpty {
+    color: #666;
+    font-size: 14px;
+}
+
+.miniCartList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.miniCartRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    padding-top: 6px;
+    border-top: 1px solid #f0f0f0;
+}
+
+.miniCartRow:first-child {
+    border-top: none;
+    padding-top: 0;
+}
+
+.miniCartRowLabel {
+    font-weight: 600;
+}
+
+.header {
+    border-bottom: 1px solid #e6e6e6;
+    background: #fff;
+}
+
+.headerInner {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+}
+
+.main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 16px;
 }
