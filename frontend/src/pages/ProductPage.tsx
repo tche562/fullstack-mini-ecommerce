@@ -16,37 +16,39 @@ type Product = {
 
 export default function ProductPage() {
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>("");
+  const [error, setError] = useState<{
+    message: string;
+    detail?: string;
+  } | null>(null);
+
   const [product, setProduct] = useState<Product | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
   const [cart, setCart] = useState<Cart>({});
   const [errorMessage, setErrorMessage] = useState<string>("");
 
-  useEffect(() => {
-    let mounted = true;
+  const loadProduct = async () => {
+    setLoading(true);
+    setError(null);
 
-    fetch("/api/product")
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        return res.json();
-      })
-      .then((data: Product) => {
-        if (!mounted) return;
-        setProduct(data);
-        setError("");
-      })
-      .catch((e: unknown) => {
-        if (!mounted) return;
-        setError(e instanceof Error ? e.message : "Unknown error");
-      })
-      .finally(() => {
-        if (!mounted) return;
-        setLoading(false);
+    try {
+      const res = await fetch("/api/product");
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data: Product = await res.json();
+      setProduct(data);
+    } catch (e: unknown) {
+      const raw = e instanceof Error ? e.message : "Unknown error";
+      console.log("loadProduct error:", e);
+      setError({
+        message: "Failed to load product. Is the backend running on :3001?",
+        detail: raw,
       });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    return () => {
-      mounted = false;
-    };
+  useEffect(() => {
+    void loadProduct();
   }, []);
 
   const formattedPrice = useMemo(() => {
@@ -55,15 +57,51 @@ export default function ProductPage() {
     return `$${n.toFixed(2)}`;
   }, [product?.price]);
 
-  if (loading) return <div className="page">Loading...</div>;
-  if (error)
+  if (loading) {
     return (
-      <div className="page" style={{ color: "crimson" }}>
-        {error}
+      <div className="page">
+        <header className="header">
+          <div className="headerInner">
+            <div className="brand">Mini Ecommerce</div>
+            <div style={{ opacity: 0.6 }}>Loading...</div>
+          </div>
+        </header>
+
+        <main className="main">
+          <div className="loadingBox">Loading...</div>
+        </main>
       </div>
     );
-  if (!product) return <div className="page">No product.</div>;
+  }
 
+  // 2) Error UI + Retry
+  if (error) {
+    return (
+      <div className="page">
+        <header className="header">
+          <div className="headerInner">
+            <div className="brand">Mini Ecommerce</div>
+          </div>
+        </header>
+
+        <main className="main">
+          <div className="errorBox" role="alert">
+            <div className="errorTitle">Something went wrong</div>
+            <div className="errorMsg">{error.message}</div>
+            {error.detail ? (
+              <div className="errorDetail">{error.detail}</div>
+            ) : null}
+            <button className="retryButton" type="button" onClick={loadProduct}>
+              Retry
+            </button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+  if (!product) {
+    return <div className="page">No product.</div>;
+  }
   return (
     <div className="page">
       <header className="header">

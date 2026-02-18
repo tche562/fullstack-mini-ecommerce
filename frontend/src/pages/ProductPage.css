@@ -362,3 +362,48 @@
 .miniCartPanel {
     border-radius: 0;
 }
+
+.loadingBox {
+    border: 1px solid var(--border);
+    background: var(--soft);
+    padding: 16px;
+    font-weight: 700;
+}
+
+.errorBox {
+    border: 1px solid var(--dangerBorder);
+    background: var(--dangerBg);
+    color: var(--dangerText);
+    padding: 16px;
+}
+
+.errorTitle {
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: #111;
+}
+
+.errorMsg {
+    margin-bottom: 12px;
+    color: var(--dangerText);
+}
+
+.retryButton {
+    border: 1px solid #111;
+    background: #fff;
+    color: #111;
+    padding: 10px 14px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.retryButton:hover {
+    background: #111;
+    color: #fff;
+}
+
+.errorDetail {
+    margin-top: 6px;
+    font-size: 12px;
+    color: #666;
+}
