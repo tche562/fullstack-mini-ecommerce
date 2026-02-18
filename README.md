@@ -105,6 +105,42 @@ Note:
 
 - In dev mode, Vite proxy may log `ECONNREFUSED` in the terminal when backend is down. This is expected.
 
+### Edge case: dirty data variants (Product normalization)
+
+The backend supports a simple test switch via query params to simulate “dirty data” and validate frontend resilience.
+Default response (no query) remains unchanged and matches the required JSON contract.
+
+How to verify:
+
+1. Start **backend** (`cd backend && npm run dev`)
+2. Start **frontend** (`cd frontend && npm run dev`) and load `http://localhost:5173`
+3. Open one of the following URLs (or use the curl commands below)
+
+Frontend URLs:
+
+- `http://localhost:5173/?variant=dirtyPrice`
+- `http://localhost:5173/?variant=noSizes`
+- `http://localhost:5173/?variant=longLabel`
+- `http://localhost:5173/?variant=missingLabelAndLong`
+
+Expected:
+
+- `dirtyPrice`: price becomes non-numeric → UI displays `N/A`
+- `noSizes`: `sizeOptions` is empty → UI shows “No sizes available” and disables **Add to Cart**
+- `longLabel`: `label` missing but `long` present → UI uses `long` as the size label
+- `missingLabelAndLong`: both `label` and `long` missing → UI falls back to `String(id)` for the size label
+
+Backend curl (direct):
+
+- `curl -s "http://localhost:3001/api/product?variant=dirtyPrice"`
+- `curl -s "http://localhost:3001/api/product?variant=noSizes"`
+- `curl -s "http://localhost:3001/api/product?variant=longLabel"`
+- `curl -s "http://localhost:3001/api/product?variant=missingLabelAndLong"`
+
+Note:
+
+- These variants exist only to help verify edge-case handling. The default `/api/product` response remains strict and unchanged.
+
 ## Tests (Vitest)
 
 Only unit tests for `addToCart` are included (no UI/E2E tests).
