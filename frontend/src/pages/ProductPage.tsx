@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import "./ProductPage.css";
+import SizeSelector from "../components/SizeSelector";
+import { addToCart } from "../cart/addToCart";
+import type { Cart } from "../types";
 
 type Product = {
   id: number;
@@ -14,6 +17,10 @@ export default function ProductPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [product, setProduct] = useState<Product | null>(null);
+  const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
+  const [cart, setCart] = useState<Cart>({});
+
+  const [errorMessage, setErrorMessage] = useState<string>("");
 
   useEffect(() => {
     let mounted = true;
@@ -48,6 +55,15 @@ export default function ProductPage() {
     return `$${n.toFixed(2)}`;
   }, [product?.price]);
 
+  const selectedSize = useMemo(() => {
+    if (selectedSizeId == null) return null;
+
+    const opt = product?.sizeOptions?.find((s) => s.id === selectedSizeId);
+    const label = opt?.label ?? opt?.long ?? "";
+
+    return { id: selectedSizeId, label };
+  }, [product, selectedSizeId]);
+
   if (loading) return <div className="page">Loading...</div>;
   if (error)
     return (
@@ -72,23 +88,79 @@ export default function ProductPage() {
 
           <p className="desc">{product.description}</p>
 
-          {/* Sizes (display only for now, no selector behavior yet) */}
+          {/* Size area (selector placeholder for now) */}
           <div className="sectionLabel">Size</div>
-          <div className="sizesRow">
-            {product.sizeOptions.map((s) => {
-              const label = s.label ?? s.long ?? "";
-              return (
-                <span key={s.id} className="sizePill">
-                  {label}
-                </span>
-              );
-            })}
-          </div>
+          <SizeSelector
+            options={product.sizeOptions}
+            selectedId={selectedSizeId}
+            onSelect={(id) => {
+              setSelectedSizeId(id);
+              setErrorMessage(""); // clear error immediately after selecting a size
+            }}
+          />
 
-          {/* Button (no logic yet) */}
-          <button className="button" type="button" disabled>
+          {/* Add to Cart (visible now; logic comes later) */}
+
+          <button
+            className="button"
+            type="button"
+            onClick={() => {
+              if (selectedSizeId == null) {
+                setErrorMessage("Please select a size");
+                return;
+              }
+
+              const opt = product?.sizeOptions?.find(
+                (s) => s.id === selectedSizeId,
+              );
+              const label = opt?.label ?? opt?.long ?? "";
+              if (!label) {
+                setErrorMessage("Please select a size");
+                return;
+              }
+
+              setErrorMessage("");
+              setCart((prev) =>
+                addToCart(prev, { id: selectedSizeId, label }, product),
+              );
+            }}
+          >
             Add to Cart
           </button>
+
+          {errorMessage ? (
+            <div className="errorText">{errorMessage}</div>
+          ) : null}
+
+          {/* Mini-cart placeholder */}
+          <div className="cartBox" aria-label="Mini cart">
+            <div className="cartTitle">Cart</div>
+
+            {Object.values(cart).length === 0 ? (
+              <div className="cartEmpty">Cart is empty</div>
+            ) : (
+              <div className="cartList">
+                {Object.values(cart).map((item) => (
+                  <div key={item.sizeId} className="cartRow">
+                    <span className="cartRowLabel">{item.sizeLabel}</span>
+                    <span className="cartRowQty">x{item.qty}</span>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <pre
+            style={{
+              marginTop: 12,
+              fontSize: 12,
+              background: "#f7f7f7",
+              padding: 8,
+              borderRadius: 6,
+            }}
+          >
+            {JSON.stringify(cart, null, 2)}
+          </pre>
         </div>
       </div>
     </div>

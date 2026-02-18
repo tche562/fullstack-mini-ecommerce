@@ -6,3 +6,16 @@ export type Product = {
   imageURL: string;
   sizeOptions: { id: number; label?: string; long?: string }[];
 };
+
+export type CartItem = {
+  sizeId: number;
+  sizeLabel: string;
+  qty: number;
+};
+
+export type Cart = Record<number, CartItem>;
+
+export type SelectedSize = {
+  id: number;
+  label: string;
+};
