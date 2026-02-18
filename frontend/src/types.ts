@@ -19,3 +19,18 @@ export type SelectedSize = {
   id: number;
   label: string;
 };
+
+export type NormalizedSizeOption = {
+  id: number;
+  label: string;
+};
+
+export type NormalizedProduct = {
+  id: number;
+  title: string;
+  description: string;
+  imageURL: string;
+  price: string; // "$75.00" or "N/A"
+  priceNumber: number | null;
+  sizeOptions: NormalizedSizeOption[];
+};

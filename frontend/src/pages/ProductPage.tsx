@@ -3,16 +3,9 @@ import "./ProductPage.css";
 import SizeSelector from "../components/SizeSelector";
 import { addToCart } from "../cart/addToCart";
 import MiniCart from "../components/MiniCart";
-import type { Cart } from "../types";
+import { normalizeProduct } from "../product/normalizeProduct";
 
-type Product = {
-  id: number;
-  title: string;
-  description: string;
-  price: number | string;
-  imageURL: string;
-  sizeOptions: { id: number; label?: string; long?: string }[];
-};
+import type { Cart, NormalizedProduct } from "../types";
 
 export default function ProductPage() {
   const [loading, setLoading] = useState(true);
@@ -21,7 +14,7 @@ export default function ProductPage() {
     detail?: string;
   } | null>(null);
 
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<NormalizedProduct | null>(null);
   const [selectedSizeId, setSelectedSizeId] = useState<number | null>(null);
   const [cart, setCart] = useState<Cart>({});
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -31,10 +24,16 @@ export default function ProductPage() {
     setError(null);
 
     try {
-      const res = await fetch("/api/product");
+      const variant = new URLSearchParams(window.location.search).get(
+        "variant",
+      );
+      const url = variant
+        ? `/api/product?variant=${encodeURIComponent(variant)}`
+        : "/api/product";
+      const res = await fetch(url);
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data: Product = await res.json();
-      setProduct(data);
+      const data = await res.json();
+      setProduct(normalizeProduct(data));
     } catch (e: unknown) {
       const raw = e instanceof Error ? e.message : "Unknown error";
       console.log("loadProduct error:", e);
@@ -50,13 +49,6 @@ export default function ProductPage() {
   useEffect(() => {
     void loadProduct();
   }, []);
-
-  const formattedPrice = useMemo(() => {
-    const n = Number(product?.price);
-    if (!Number.isFinite(n)) return "$0.00";
-    return `$${n.toFixed(2)}`;
-  }, [product?.price]);
-
   if (loading) {
     return (
       <div className="page">
@@ -121,7 +113,7 @@ export default function ProductPage() {
           {/* Right: Details */}
           <div>
             <h1 className="title">{product.title}</h1>
-            <div className="price">{formattedPrice}</div>
+            <div className="price">{product.price}</div>
 
             <p className="desc">{product.description}</p>
 
@@ -137,20 +129,26 @@ export default function ProductPage() {
                 setErrorMessage("");
               }}
             />
+            {product.sizeOptions.length === 0 ? (
+              <div className="errorText">No sizes available</div>
+            ) : null}
 
             <button
               className="button"
               type="button"
+              disabled={product.sizeOptions.length === 0}
               onClick={() => {
+                if (product.sizeOptions.length === 0) return;
+
                 if (selectedSizeId == null) {
                   setErrorMessage("Please select a size");
                   return;
                 }
 
-                const opt = product?.sizeOptions?.find(
+                const opt = product.sizeOptions.find(
                   (s) => s.id === selectedSizeId,
                 );
-                const label = opt?.label ?? opt?.long ?? "";
+                const label = opt?.label ?? String(selectedSizeId);
                 if (!label) {
                   setErrorMessage("Please select a size");
                   return;
@@ -164,6 +162,7 @@ export default function ProductPage() {
             >
               Add to Cart
             </button>
+
             {errorMessage ? (
               <div className="errorText">{errorMessage}</div>
             ) : null}
