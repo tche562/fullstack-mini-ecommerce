@@ -68,6 +68,43 @@ Frontend:
 
 - `http://localhost:5173`
 
+## Quick Verify
+
+### Backend contract
+
+- `curl -i http://localhost:3001/api/product`
+
+Expected:
+
+- `200 OK`
+- JSON fields match the contract exactly:
+  - `id, title, description, price, imageURL, sizeOptions[{id,label}]`
+
+### Frontend proxy
+
+- Open `http://localhost:5173`
+- In browser DevTools → Network, confirm request to `/api/product` returns **200** when backend is running.
+
+### Edge case: backend down (Error + Retry UI)
+
+This project intentionally handles the “backend unavailable” scenario in the UI.
+
+How to verify:
+
+1. Start **frontend** (`cd frontend && npm run dev`) and load `http://localhost:5173`
+2. Stop **backend** (Ctrl+C in the backend terminal)
+3. Refresh the page
+
+Expected:
+
+- The page shows an error state (e.g. “Something went wrong” / “Failed to load product...”)
+- A **Retry** button is visible
+- After restarting backend, clicking **Retry** returns to the normal product page
+
+Note:
+
+- In dev mode, Vite proxy may log `ECONNREFUSED` in the terminal when backend is down. This is expected.
+
 ## Tests (Vitest)
 
 Only unit tests for `addToCart` are included (no UI/E2E tests).
