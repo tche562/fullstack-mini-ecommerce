@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import ProductPage from "./pages/ProductPage";
 
 type SizeOption = {
   id: number;
@@ -50,12 +51,7 @@ function App() {
     return <main>Error: no product returned</main>;
   }
 
-  return (
-    <main>
-      <h1>{product.title}</h1>
-      <pre>{JSON.stringify(product, null, 2)}</pre>
-    </main>
-  );
+  return <ProductPage />;
 }
 
 export default App;

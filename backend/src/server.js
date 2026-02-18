@@ -8,7 +8,8 @@ app.get("/health", (_req, res) => {
 });
 
 app.get("/api/product", (req, res) => {
-  res.json({
+  res.set("Content-Type", "application/json; charset=utf-8");
+  res.status(200).json({
     id: 1,
     title: "Classic Tee",
     description:
@@ -25,5 +26,5 @@ app.get("/api/product", (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log("Backend running: http://localhost:3001");
+  console.log(`Backend running: http://localhost:${PORT}`);
 });
