@@ -4,6 +4,7 @@
   "description": "- Node.js >= 20.19 or Node.js >= 22.12+   - Older Node versions may break Vite due to `crypto.getRandomValues`.",
   "main": "index.js",
   "scripts": {
+    "install:all": "npm --prefix backend install && npm --prefix frontend install",
     "dev": "concurrently -n backend,frontend -c auto \"npm:dev:backend\" \"npm:dev:frontend\"",
     "dev:backend": "npm --prefix backend run dev",
     "dev:frontend": "npm --prefix frontend run dev"

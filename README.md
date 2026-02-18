@@ -31,6 +31,7 @@ From repo root:
 1. Install root dev dependency (concurrently)
 
 - `npm install`
+- `npm run install:all`
 
 2. Start both servers
 
