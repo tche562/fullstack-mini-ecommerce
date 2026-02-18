@@ -69,7 +69,7 @@ export default function ProductPage() {
       <header className="header">
         <div className="headerInner">
           <div className="brand">Mini Ecommerce</div>
-          <MiniCart cart={cart} />
+          <MiniCart cart={cart} product={product} />
         </div>
       </header>
 
@@ -87,7 +87,10 @@ export default function ProductPage() {
 
             <p className="desc">{product.description}</p>
 
-            <div className="sectionLabel">Size</div>
+            <div className="sectionLabel">
+              Size <span className="requiredStar">*</span>
+            </div>
+
             <SizeSelector
               options={product.sizeOptions}
               selectedId={selectedSizeId}
@@ -96,10 +99,6 @@ export default function ProductPage() {
                 setErrorMessage("");
               }}
             />
-
-            {errorMessage ? (
-              <div className="errorText">{errorMessage}</div>
-            ) : null}
 
             <button
               className="button"
@@ -127,6 +126,9 @@ export default function ProductPage() {
             >
               Add to Cart
             </button>
+            {errorMessage ? (
+              <div className="errorText">{errorMessage}</div>
+            ) : null}
           </div>
         </div>
       </main>

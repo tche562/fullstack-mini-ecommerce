@@ -1,8 +1,61 @@
+/* ===== Base ===== */
+:root {
+    --text: #111;
+    --muted: #666;
+    --border: #e6e6e6;
+    --bg: #fff;
+    --soft: #fafafa;
+    --shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+
+    --accent: #111;
+    --accentText: #fff;
+
+    --dangerText: #b42318;
+    --dangerBg: #fff5f5;
+    --dangerBorder: #ffd6d6;
+}
+
+* {
+    box-sizing: border-box;
+}
+
 .page {
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+}
+
+/* ===== Header ===== */
+.header {
+    border-bottom: 1px solid var(--border);
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.headerInner {
     max-width: 980px;
     margin: 0 auto;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #111;
+    padding: 8px 16px;
+    /* shorter */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.brand {
+    font-weight: 800;
+    letter-spacing: 0.02em;
+    font-size: 13px;
+    /* shorter */
+}
+
+/* ===== Main layout ===== */
+.main {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 24px 16px;
 }
 
 .grid {
@@ -18,12 +71,13 @@
     }
 }
 
+/* ===== Image ===== */
 .imageWrap {
     width: 100%;
-    border: 1px solid #e6e6e6;
-    border-radius: 6px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
     overflow: hidden;
-    background: #fafafa;
+    background: var(--soft);
 }
 
 .image {
@@ -32,6 +86,7 @@
     display: block;
 }
 
+/* ===== Typography ===== */
 .title {
     margin: 0 0 8px;
     font-size: 28px;
@@ -39,53 +94,115 @@
 }
 
 .price {
+    position: relative;
+    padding: 14px 0;
+    margin: 0 0 14px;
     font-size: 18px;
-    font-weight: 700;
-    margin: 0 0 16px;
+    font-weight: 800;
+}
+
+.price::before,
+.price::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: var(--border);
+}
+
+.price::before {
+    top: 0;
+}
+
+.price::after {
+    bottom: 0;
 }
 
 .desc {
     margin: 0 0 18px;
     color: #444;
-    line-height: 1.5;
+    line-height: 1.55;
 }
 
+/* ===== Section label ===== */
 .sectionLabel {
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    color: #666;
-    margin: 0 0 8px;
+    color: var(--muted);
+    margin: 0 0 10px;
 }
 
+.requiredStar {
+    color: #c1121f;
+    font-weight: 800;
+    margin-left: 4px;
+}
+
+/* ===== Size buttons ===== */
 .sizesRow {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
-    margin-bottom: 16px;
+    margin-bottom: 14px;
 }
 
 .sizePill {
     border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    padding: 8px 12px;
+    padding: 9px 12px;
     font-size: 14px;
     color: #222;
     background: #fff;
+    cursor: pointer;
+    min-width: 44px;
+    text-align: center;
+    user-select: none;
+    transition: border-color 120ms ease, background 120ms ease, color 120ms ease,
+        transform 80ms ease;
 }
 
+.sizePill:hover {
+    border-color: #999;
+}
+
+.sizePill:active {
+    transform: translateY(1px);
+}
+
+.sizePillSelected {
+    border-color: var(--accent);
+    background: var(--accent);
+    color: var(--accentText);
+}
+
+/* ===== Error message ===== */
+.errorText {
+    margin: 10px 0 12px;
+    padding: 10px 12px;
+    border: 1px solid var(--dangerBorder);
+    background: var(--dangerBg);
+    color: var(--dangerText);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+/* ===== Add to Cart button (white bg, black border/text) ===== */
 .button {
     border: 1px solid #111;
-    background: #111;
-    color: #fff;
+    background: #fff;
+    color: #111;
     padding: 12px 16px;
-    border-radius: 4px;
-    font-weight: 700;
+    font-weight: 800;
     cursor: pointer;
+    width: 100%;
+    max-width: 320px;
+    transition: background 120ms ease, color 120ms ease, transform 80ms ease;
 }
 
 .button:hover {
-    opacity: 0.9;
+    background: #111;
+    color: #fff;
 }
 
 .button:active {
@@ -97,94 +214,23 @@
     cursor: not-allowed;
 }
 
-.cartBox {
-    margin-top: 18px;
-    border: 1px solid #e6e6e6;
-    border-radius: 6px;
-    padding: 12px;
-    background: #fff;
-}
-
-.cartTitle {
-    font-weight: 700;
-    margin-bottom: 6px;
-}
-
-.cartEmpty {
-    color: #666;
-    font-size: 14px;
-}
-
-.sizePill {
-    border: 1px solid #d9d9d9;
-    border-radius: 4px;
-    padding: 8px 12px;
-    font-size: 14px;
-    color: #222;
-    background: #fff;
-    cursor: pointer;
-}
-
-.sizePill:hover {
-    border-color: #999;
-}
-
-.sizePillSelected {
-    border-color: #111;
-    background: #111;
-    color: #fff;
-}
-
-.errorText {
-    margin: 8px 0 12px;
-    color: #c1121f;
-    font-size: 14px;
-    font-weight: 600;
-}
-
-.cartList {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.cartRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    padding: 6px 0;
-    border-top: 1px solid #f0f0f0;
-}
-
-.cartRow:first-child {
-    border-top: none;
-}
-
-.cartRowLabel {
-    font-weight: 600;
-}
-
-.cartRowQty {
-    color: #333;
-}
-
+/* ===== MiniCart (button + dropdown) ===== */
 .miniCart {
     position: relative;
-    margin-top: 18px;
 }
 
 .miniCartButton {
-    border: 1px solid #111;
+    border: 1px solid var(--accent);
     background: #fff;
-    color: #111;
-    padding: 10px 12px;
-    border-radius: 4px;
-    font-weight: 700;
+    color: var(--accent);
+    padding: 6px 10px;
+    /* shorter */
+    font-weight: 800;
     cursor: pointer;
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    transition: background 120ms ease;
 }
 
 .miniCartButton:hover {
@@ -193,14 +239,13 @@
 
 .miniCartBadge {
     display: inline-flex;
-    min-width: 18px;
-    height: 18px;
+    min-width: 16px;
+    height: 16px;
     padding: 0 6px;
-    border-radius: 999px;
-    background: #111;
-    color: #fff;
-    font-size: 12px;
-    line-height: 18px;
+    background: var(--accent);
+    color: var(--accentText);
+    font-size: 11px;
+    line-height: 16px;
     justify-content: center;
     align-items: center;
 }
@@ -209,13 +254,12 @@
     position: absolute;
     top: 44px;
     right: 0;
-    width: 260px;
-    border: 1px solid #e6e6e6;
-    border-radius: 6px;
-    background: #fff;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+    width: 280px;
+    border: 1px solid var(--border);
+    background: var(--bg);
+    box-shadow: var(--shadow);
     padding: 12px;
-    z-index: 10;
+    z-index: 30;
 }
 
 .miniCartPanelHeader {
@@ -226,7 +270,7 @@
 }
 
 .miniCartPanelTitle {
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .miniCartClose {
@@ -234,12 +278,17 @@
     background: transparent;
     cursor: pointer;
     font-size: 14px;
-    padding: 4px;
+    padding: 6px;
+}
+
+.miniCartClose:hover {
+    background: #f2f2f2;
 }
 
 .miniCartEmpty {
-    color: #666;
+    color: var(--muted);
     font-size: 14px;
+    padding: 6px 0;
 }
 
 .miniCartList {
@@ -248,13 +297,14 @@
     gap: 8px;
 }
 
+/* Mini-cart row with thumbnail + details (final version) */
 .miniCartRow {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-size: 14px;
-    padding-top: 6px;
+    gap: 10px;
+    padding-top: 12px;
     border-top: 1px solid #f0f0f0;
+    align-items: flex-start;
+    min-height: 78px;
 }
 
 .miniCartRow:first-child {
@@ -262,31 +312,53 @@
     padding-top: 0;
 }
 
-.miniCartRowLabel {
-    font-weight: 600;
-}
-
-.header {
-    border-bottom: 1px solid #e6e6e6;
+.miniCartThumb {
+    width: 64px;
+    height: 64px;
+    object-fit: contain;
+    /* no crop */
     background: #fff;
+    border: 1px solid var(--border);
 }
 
-.headerInner {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 14px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+.miniCartRowInfo {
+    flex: 1;
+    min-width: 0;
 }
 
-.brand {
+.miniCartRowTitle {
     font-weight: 800;
-    letter-spacing: 0.02em;
+    font-size: 13px;
+    line-height: 1.2;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
-.main {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 24px 16px;
+.miniCartRowMeta {
+    display: flex;
+    flex-direction: column;
+    /* column layout */
+    gap: 2px;
+    font-size: 12px;
+    color: #444;
+}
+
+.miniCartRowMeta span {
+    line-height: 1.2;
+}
+
+.miniCartRowPrice {
+    font-weight: 800;
+    color: #111;
+}
+
+/* ===== Square corners for buttons & dropdown ===== */
+.button,
+.sizePill,
+.miniCartButton,
+.miniCartClose,
+.miniCartPanel {
+    border-radius: 0;
 }

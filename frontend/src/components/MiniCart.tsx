@@ -1,22 +1,34 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Cart } from "../types";
 
-type Props = {
-  cart: Cart;
+type ProductSummary = {
+  title: string;
+  price: number | string;
+  imageURL: string;
 };
 
-export default function MiniCart({ cart }: Props) {
-  const [open, setOpen] = useState(false);
+type Props = {
+  cart: Cart;
+  product: ProductSummary;
+};
 
+export default function MiniCart({ cart, product }: Props) {
+  const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLDivElement | null>(null);
 
   const items = useMemo(() => Object.values(cart), [cart]);
-
   const totalQty = useMemo(
     () => items.reduce((sum, it) => sum + it.qty, 0),
     [items],
   );
 
+  const formattedPrice = useMemo(() => {
+    const n = Number(product?.price);
+    if (!Number.isFinite(n)) return "$0.00";
+    return `$${n.toFixed(2)}`;
+  }, [product?.price]);
+
+  // Click outside to close
   useEffect(() => {
     if (!open) return;
 
@@ -71,8 +83,21 @@ export default function MiniCart({ cart }: Props) {
             <div className="miniCartList">
               {items.map((item) => (
                 <div key={item.sizeId} className="miniCartRow">
-                  <span className="miniCartRowLabel">{item.sizeLabel}</span>
-                  <span className="miniCartRowQty">x{item.qty}</span>
+                  <img
+                    className="miniCartThumb"
+                    src={product.imageURL}
+                    alt={product.title}
+                  />
+                  <div className="miniCartRowInfo">
+                    <div className="miniCartRowTitle">{product.title}</div>
+                    <div className="miniCartRowMeta">
+                      <span className="miniCartRowPrice">{formattedPrice}</span>
+                      <span className="miniCartRowSize">
+                        Size: {item.sizeLabel}
+                      </span>
+                      <span className="miniCartRowQty">Qty: {item.qty}</span>
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
